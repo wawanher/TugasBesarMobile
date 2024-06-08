@@ -1,3 +1,4 @@
+// lib/providers/reseller_provider.dart
 import 'package:flutter/material.dart';
 import '../models/reseller.dart';
 
@@ -11,16 +12,8 @@ class ResellerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateReseller(Reseller updatedReseller) {
-    final index = _resellers.indexWhere((res) => res.id == updatedReseller.id);
-    if (index != -1) {
-      _resellers[index] = updatedReseller;
-      notifyListeners();
-    }
-  }
-
   void removeReseller(String id) {
-    _resellers.removeWhere((res) => res.id == id);
+    _resellers.removeWhere((reseller) => reseller.id == id);
     notifyListeners();
   }
 }

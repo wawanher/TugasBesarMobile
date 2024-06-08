@@ -4,5 +4,9 @@ class Reseller {
   final String name;
   final String contactInfo;
 
-  Reseller({required this.id, required this.name, required this.contactInfo});
+  Reseller({
+    required this.id,
+    required this.name,
+    required this.contactInfo,
+  });
 }

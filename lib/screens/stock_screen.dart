@@ -1,124 +1,104 @@
+// lib/screens/stock_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/stock_provider.dart';
 import '../providers/product_provider.dart';
-import '../models/stock.dart';
-import 'dart:math';
+import 'package:myapp/models/product.dart';
 
 class StockScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final stockProvider = Provider.of<StockProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stocks'),
+        title: Text('Manage Stocks'),
       ),
       body: ListView.builder(
-        itemCount: stockProvider.stocks.length,
+        itemCount: productProvider.products.length,
         itemBuilder: (ctx, index) {
-          final stock = stockProvider.stocks[index];
-          final product = productProvider.products.firstWhere((prod) => prod.id == stock.productId);
-          return ListTile(
-            title: Text(product.name),
-            subtitle: Text('Quantity: ${stock.quantity} - Date: ${stock.date}'),
-            trailing: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                stockProvider.removeStock(stock.id);
-              },
+          final product = productProvider.products[index];
+          return Card(
+            elevation: 5,
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: ListTile(
+              contentPadding: EdgeInsets.all(10),
+              title: Text(
+                product.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 5),
+                  Text('Stock: ${product.stock}', style: TextStyle(fontSize: 16)),
+                ],
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.add_box, color: Colors.green),
+                onPressed: () {
+                  _showAddStockModal(context, productProvider, product);
+                },
+              ),
             ),
           );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          _showAddStockDialog(context, stockProvider, productProvider);
         },
       ),
     );
   }
 
-  void _showAddStockDialog(BuildContext context, StockProvider stockProvider, ProductProvider productProvider) {
+  void _showAddStockModal(BuildContext context, ProductProvider productProvider, Product product) {
     final _formKey = GlobalKey<FormState>();
-    String? selectedProductId;
     int quantity = 0;
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Add Stock'),
-        content: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              DropdownButtonFormField<String>(
-                hint: Text('Select Product'),
-                value: selectedProductId,
-                onChanged: (newValue) {
-                  selectedProductId = newValue;
-                },
-                items: productProvider.products.map((product) {
-                  return DropdownMenuItem<String>(
-                    value: product.id,
-                    child: Text(product.name),
-                  );
-                }).toList(),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select a product';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Quantity'),
-                keyboardType: TextInputType.number,
-                onSaved: (newValue) {
-                  quantity = int.parse(newValue!);
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter quantity';
-                  }
-                  if (int.tryParse(value) == null) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
-              ),
-            ],
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Add Stock to ${product.name}',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Quantity'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter quantity';
+                    }
+                    if (int.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    quantity = int.parse(value!);
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      productProvider.updateProductStock(product.id, quantity);
+                      Navigator.of(ctx).pop();
+                    }
+                  },
+                  child: Text('Add Stock'),
+                ),
+              ],
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          ),
-          TextButton(
-            child: Text('Add'),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                stockProvider.addStock(
-                  Stock(
-                    id: Random().nextInt(1000).toString(),
-                    productId: selectedProductId!,
-                    quantity: quantity,
-                    date: DateTime.now(),
-                  ),
-                );
-                Navigator.of(ctx).pop();
-              }
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

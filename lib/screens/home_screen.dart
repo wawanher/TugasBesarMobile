@@ -30,19 +30,16 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 222, 240, 237), // Background color
+                    backgroundColor: Colors.orange,
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                    textStyle: TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: Text('Manage Stocks'),
                 ),
-                SizedBox(height: 20), // Add space between buttons
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -51,19 +48,16 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 222, 240, 237), // Background color
+                    backgroundColor: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                    textStyle: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: Text('Manage Products', ),
+                  child: Text('Manage Products'),
                 ),
-                SizedBox(height: 20), // Add space between buttons
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -72,14 +66,11 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 222, 240, 237), // Background color
+                    backgroundColor: Colors.blue,
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                    textStyle: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: Text('Manage Resellers'),

@@ -3,25 +3,19 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 
 class ProductProvider with ChangeNotifier {
-  List<Product> _products = [];
+  List<Product> _products = [
+    Product(id: '1', name: 'Product 1', stock: 10, price: 20.0),
+    Product(id: '2', name: 'Product 2', stock: 5, price: 30.0),
+    Product(id: '3', name: 'Product 3', stock: 8, price: 25.0),
+  ];
 
   List<Product> get products => _products;
 
-  void addProduct(Product product) {
-    _products.add(product);
-    notifyListeners();
-  }
-
-  void updateProduct(Product updatedProduct) {
-    final index = _products.indexWhere((prod) => prod.id == updatedProduct.id);
-    if (index != -1) {
-      _products[index] = updatedProduct;
+  void updateProductStock(String id, int newStock) {
+    final productIndex = _products.indexWhere((prod) => prod.id == id);
+    if (productIndex != -1) {
+      _products[productIndex].stock = newStock;
       notifyListeners();
     }
-  }
-
-  void removeProduct(String id) {
-    _products.removeWhere((prod) => prod.id == id);
-    notifyListeners();
   }
 }

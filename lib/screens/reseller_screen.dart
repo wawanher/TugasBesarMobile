@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/reseller_provider.dart';
+import '../providers/product_provider.dart';
 import '../models/reseller.dart';
 import 'dart:math';
 
@@ -8,6 +9,7 @@ class ResellerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resellerProvider = Provider.of<ResellerProvider>(context);
+    final productProvider = Provider.of<ProductProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +38,9 @@ class ResellerScreen extends StatelessWidget {
                   resellerProvider.removeReseller(reseller.id);
                 },
               ),
+              onTap: () {
+                _showSellToResellerModal(context, productProvider, reseller);
+              },
             ),
           );
         },
@@ -78,6 +83,7 @@ class ResellerScreen extends StatelessWidget {
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Contact Info'),
+                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter contact info';
@@ -104,6 +110,78 @@ class ResellerScreen extends StatelessWidget {
                     }
                   },
                   child: Text('Add Reseller'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSellToResellerModal(BuildContext context, ProductProvider productProvider, Reseller reseller) {
+    final _formKey = GlobalKey<FormState>();
+    String productId = '';
+    int quantity = 0;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Sell to ${reseller.name}',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: 'Product'),
+                  items: productProvider.products.map((product) {
+                    return DropdownMenuItem<String>(
+                      value: product.id,
+                      child: Text(product.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    productId = value!;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a product';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Quantity'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter quantity';
+                    }
+                    if (int.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    quantity = int.parse(value!);
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      productProvider.updateProductStock(productId, quantity);
+                      Navigator.of(ctx).pop();
+                    }
+                  },
+                  child: Text('Sell'),
                 ),
               ],
             ),
