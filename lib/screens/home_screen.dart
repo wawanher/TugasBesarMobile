@@ -29,8 +29,20 @@ class HomeScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => StockScreen()),
                     );
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 222, 240, 237), // Background color
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    textStyle: TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                   child: Text('Manage Stocks'),
                 ),
+                SizedBox(height: 20), // Add space between buttons
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -38,8 +50,20 @@ class HomeScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => ProductScreen()),
                     );
                   },
-                  child: Text('Manage Products'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 222, 240, 237), // Background color
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text('Manage Products', ),
                 ),
+                SizedBox(height: 20), // Add space between buttons
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -47,6 +71,17 @@ class HomeScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => ResellerScreen()),
                     );
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 222, 240, 237), // Background color
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                   child: Text('Manage Resellers'),
                 ),
               ],
